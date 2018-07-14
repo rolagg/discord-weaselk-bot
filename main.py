@@ -5,6 +5,8 @@ import time
 import random
 import requests
 import feedparser
+import boto
+from boto.s3.connection import S3Connection
 
 Client = discord.Client()
 client = commands.Bot(
@@ -177,5 +179,4 @@ async def da(ctx, source="marreeps", n=1, *tags):
         embed.set_footer(text=f.entries[num].published)
         await client.say(embed=embed)
 
-
-client.run('NDQ3MzY4ODU0ODIyMTkxMTA0.DiUDRA.sk3nAkujYhRx0NH1BgS_74uJp98')
+client.run(os.environ["TOKEN"])
