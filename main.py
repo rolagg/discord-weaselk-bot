@@ -179,4 +179,4 @@ async def da(ctx, source="marreeps", n=1, *tags):
         embed.set_footer(text=f.entries[num].published)
         await client.say(embed=embed)
 
-client.run(os.environ["TOKEN"])
+client.run(S3Connection(os.environ["TOKEN"]))
