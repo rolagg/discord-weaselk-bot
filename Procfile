@@ -1,0 +1,1 @@
+weaselk: python main.py
