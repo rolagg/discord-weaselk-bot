@@ -5,6 +5,7 @@ import time
 import random
 import requests
 import feedparser
+import os
 import boto
 from boto.s3.connection import S3Connection
 
@@ -182,4 +183,4 @@ async def da(ctx, source="marreeps", n=1, *tags):
 TOKEN = S3Connection(os.environ["TOKEN"])
 print(TOKEN)
 		
-client.run()
+client.run(TOKEN)
