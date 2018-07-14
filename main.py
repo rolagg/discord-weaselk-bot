@@ -6,7 +6,7 @@ import random
 import requests
 import feedparser
 import os
-import boto
+from settings import PROJECT_ROOT
 from boto.s3.connection import S3Connection
 
 Client = discord.Client()
