@@ -180,6 +180,6 @@ async def da(ctx, source="marreeps", n=1, *tags):
         await client.say(embed=embed)
 
 TOKEN = S3Connection(os.environ["TOKEN"])
-print TOKEN
+print(TOKEN)
 		
 client.run()
