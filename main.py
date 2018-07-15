@@ -30,7 +30,10 @@ async def invite(ctx):
 @client.command(pass_context=True, hidden=True)
 async def ping(ctx):
     """Pong!"""
-    await client.say("Pong!")
+    p_msg = await client.say("Pong!")
+	diff = p_msg.timestamp - ctx.message.timestamp
+	await client.edit_message("Pong! {0} sec".format(diff))
+	
 
 @client.command(pass_context=True, hidden=True)
 async def uptime(ctx):
