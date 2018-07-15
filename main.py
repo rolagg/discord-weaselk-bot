@@ -32,7 +32,7 @@ async def ping(ctx):
     """Pong!"""
     p_msg = await client.say("Pong!")
     diff = p_msg.timestamp - ctx.message.timestamp
-    await client.edit_message("Pong! {0} sec".format(diff))
+    await client.edit_message(p_msg, "Pong! {0} sec".format(diff))
 	
 
 @client.command(pass_context=True, hidden=True)
