@@ -179,6 +179,4 @@ async def da(ctx, source="marreeps", n=1, *tags):
         await client.say(embed=embed)
 
 		
-TOKEN = os.environ.get('TOKEN', None)
-		
-client.run(TOKEN)
+client.run(os.environ.get("TOKEN", None))
