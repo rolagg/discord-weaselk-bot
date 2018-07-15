@@ -16,10 +16,9 @@ client = commands.Bot(
 
 @client.event
 async def on_ready():
-    print('Logged in as')
-    print("{0}#{1}".format(client.user.name, client.user.discriminator))
-    global ready_time
-    ready_time = time.time()
+    print("Logged in as {0}#{1}".format(client.user.name, client.user.discriminator))
+    global READY_TIME
+    READY_TIME = time.time()
     await client.change_presence(game=discord.Game(name="{0}help".format(COMMAND_PREFIX)))
 
 @client.command(pass_context=True)
@@ -37,7 +36,7 @@ async def ping(ctx):
 async def uptime(ctx):
     """How long have I been working."""
     now = time.time()
-    diff = int(now - ready_time)
+    diff = int(now - READY_TIME)
 
     t_max = [60, 60, 24]
 
