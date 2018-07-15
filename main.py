@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import time
+import datetime
 import random
 import requests
 import feedparser
@@ -32,7 +33,9 @@ async def ping(ctx):
     """Pong!"""
     p_msg = await client.say("Pong!")
     diff = float(p_msg.timestamp - ctx.message.timestamp)
-    await client.edit_message(p_msg, "Pong! {0} sec".format(diff))
+    s = diff / datetime.timedelta(seconds=1) 
+    ms = diff / datetime.timedelta(milliseconds=1)
+    await client.edit_message(p_msg, "Pong! {0}.{1} sec".format(s, ms))
 	
 
 @client.command(pass_context=True, hidden=True)
