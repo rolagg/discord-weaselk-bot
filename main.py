@@ -31,7 +31,7 @@ async def invite(ctx):
 async def ping(ctx):
     """Pong!"""
     p_msg = await client.say("Pong!")
-    diff = p_msg.timestamp - ctx.message.timestamp
+    diff = float(p_msg.timestamp - ctx.message.timestamp)
     await client.edit_message(p_msg, "Pong! {0} sec".format(diff))
 	
 
