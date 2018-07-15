@@ -20,7 +20,7 @@ async def on_ready():
     print("{0}#{1}".format(client.user.name, client.user.discriminator))
     global ready_time
     ready_time = time.time()
-	await client.change_presence(game=discord.Game(name="{0}help".format(COMMAND_PREFIX)))
+    await client.change_presence(game=discord.Game(name="{0}help".format(COMMAND_PREFIX)))
 
 @client.command(pass_context=True)
 async def invite(ctx):
