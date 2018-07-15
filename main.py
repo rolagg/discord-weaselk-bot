@@ -7,20 +7,20 @@ import requests
 import feedparser
 import os
 
+COMMAND_PREFIX = "."
 Client = discord.Client()
 client = commands.Bot(
-    command_prefix='.',
+    command_prefix=COMMAND_PREFIX,
     description="Hello! I'm python test bot by risualiser#1706"
 )
 
 @client.event
 async def on_ready():
     print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
-    print('------')
+    print("{0}#{1}".format(client.user.name, client.user.discriminator))
     global ready_time
     ready_time = time.time()
+	await client.change_presence(game=discord.Game(name="{0}help".format(COMMAND_PREFIX)))
 
 @client.command(pass_context=True)
 async def invite(ctx):
