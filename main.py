@@ -6,7 +6,6 @@ import random
 import requests
 import feedparser
 import os
-from boto.s3.connection import S3Connection
 
 Client = discord.Client()
 client = commands.Bot(
@@ -179,7 +178,7 @@ async def da(ctx, source="marreeps", n=1, *tags):
         embed.set_footer(text=f.entries[num].published)
         await client.say(embed=embed)
 
-TOKEN = S3Connection(os.environ["S3_TOKEN"])
-print(TOKEN)
+		
+TOKEN = os.environ.get('TOKEN', None)
 		
 client.run(TOKEN)
