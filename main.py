@@ -120,7 +120,7 @@ async def test(ctx):
 
 
 @client.command(pass_context=True)
-async def cl(ctx, count=1, mode="b", id=0):  # b - bot, a - admin (all), m - author (my)
+async def cl(ctx, count=1, mode="b", id=0, after=0):  # b - bot, a - admin (all), m - author (my)
     """Clear bot messages."""
 
     access_bot = False
@@ -142,6 +142,9 @@ async def cl(ctx, count=1, mode="b", id=0):  # b - bot, a - admin (all), m - aut
         except:
             target_m = ctx.message
 
+    cl_before = target_m if not after else ctx.message
+    cl_after = target_m if after else None
+
     if type == type.text:
         if ctx.message.author.server_permissions.manage_messages or ctx.message.author.server_permissions.administrator:
             text_rights_user = True
@@ -156,11 +159,11 @@ async def cl(ctx, count=1, mode="b", id=0):  # b - bot, a - admin (all), m - aut
             access_author = True
 
     if access_admin:
-        async for msg in client.logs_from(ctx.message.channel, limit=count, before=target_m):
+        async for msg in client.logs_from(ctx.message.channel, limit=count, before=cl_before, after=cl_after):
             await client.delete_message(msg)
     else:
         i = 0
-        async for msg in client.logs_from(ctx.message.channel, limit=100, before=target_m):
+        async for msg in client.logs_from(ctx.message.channel, limit=100, before=cl_before, after=cl_after):
             if i < count:
                 if (access_author and msg.author == ctx.message.author) or (access_bot and msg.author == client.user):
                     await client.delete_message(msg)
@@ -375,12 +378,8 @@ async def da(ctx, author="ikimaru-art", amount="1", *tags):
     elif n < 1:
         n = 1
 
-    dest_channel = ctx.message.channel
-    if n > 1:
-        dest_channel = ctx.message.author
-
     for num in range(n - 1, -1, -1):
-        await client.send_typing(dest_channel)
+        await client.send_typing(ctx.message.channel)
 
         entry = f.entries[num]
 
@@ -423,9 +422,9 @@ async def da(ctx, author="ikimaru-art", amount="1", *tags):
                 icon_url=entry.media_credit[1]["content"],
                 text=entry.media_credit[0]["content"]
             )
-            await client.send_message(dest_channel, embed=embed)
+            await client.say(embed=embed)
         else:
-            await client.send_message(dest_channel, entry.link)
+            await client.say(entry.link)
 
 
 @client.command(pass_context=True)
@@ -445,10 +444,6 @@ async def tb(ctx, author="discount-supervillain", amount="1", *tags):
             tag_words = n
         n = 1
 
-    dest_channel = ctx.message.channel
-    if n > 1:
-        dest_channel = ctx.message.author
-
     r = requests.get("http://{0}.tumblr.com/".format(author))
     if 200 <= r.status_code < 300:
         pr = r.url.split("://")[0]
@@ -467,7 +462,7 @@ async def tb(ctx, author="discount-supervillain", amount="1", *tags):
             n = 1
 
         for num in range(n - 1, -1, -1):
-            await client.send_message(dest_channel, f.entries[num].link)
+            await client.say(f.entries[num].link)
 
 
 @client.command(pass_context=True)
