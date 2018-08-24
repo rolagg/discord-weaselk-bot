@@ -144,9 +144,9 @@ async def cl(ctx, count=1, mode="b", id=0, after=0):  # b - bot, a - admin (all)
         try:
             target_m = await client.get_message(ctx.message.channel, id)
         except:
-            target_m = ctx.message
+            target_m = None
 
-    cl_before = target_m if not after else ctx.message
+    cl_before = target_m if not after else None
     cl_after = target_m if after else None
 
     if type == type.text:
@@ -162,6 +162,9 @@ async def cl(ctx, count=1, mode="b", id=0, after=0):  # b - bot, a - admin (all)
         elif mode == "m":
             access_author = True
 
+    wait_msg = await client.say("Cleaning...")
+    await client.delete_message(ctx.message)
+            
     if access_admin:
         async for msg in client.logs_from(ctx.message.channel, limit=count, before=cl_before, after=cl_after):
             await client.delete_message(msg)
@@ -173,7 +176,7 @@ async def cl(ctx, count=1, mode="b", id=0, after=0):  # b - bot, a - admin (all)
                     await client.delete_message(msg)
                     i += 1
     if text_rights_bot:
-        await client.delete_message(ctx.message)
+        await client.delete_message(wait_msg)
 
 
 @client.command(pass_context=True)
