@@ -62,7 +62,11 @@ async def on_ready():
     global READY_TIME
     READY_TIME = time.time()
     await client.change_presence(game=discord.Game(name="{0}help".format(COMMAND_PREFIX)))
-
+            
+@client.event
+async def on_command_error(error, ctx):
+    if isinstance(error, commands.CommandNotFound):
+        return 0
 
 @client.command(pass_context=True, hidden=True)
 async def up(ctx):
