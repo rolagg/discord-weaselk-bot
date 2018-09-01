@@ -21,8 +21,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gec
 
 Client = discord.Client()
 client = commands.Bot(
-    command_prefix=COMMAND_PREFIX,
-    description="Hello! I'm python test bot by risualiser#1706"
+    command_prefix=COMMAND_PREFIX
 )
 
 
@@ -107,12 +106,12 @@ async def ping(ctx):
     """Pong!"""
     print_log(ctx)
 
-    p_msg = await client.say("Pong!")
+    p_msg = await client.say("🏓 Pong!")
     diff = p_msg.timestamp - ctx.message.timestamp
     s = diff / datetime.timedelta(seconds=1)
     ms = diff / datetime.timedelta(milliseconds=1)
     d = s + (ms / 1000)
-    await client.edit_message(p_msg, "Pong! {0} sec".format(d))
+    await client.edit_message(p_msg, "🏓 Pong! {0} sec".format(d))
 
 
 @client.command(pass_context=True, hidden=True)
@@ -120,66 +119,10 @@ async def test(ctx):
     """Test!"""
     print_log(ctx)
 
-    await client.say("The test was completed successfully!")
+    await client.say("🎩 The test was completed successfully!")
 
 
-@client.command(pass_context=True)
-async def cl(ctx, count=1, mode="b", id=0, after=0):  # b - bot, a - admin (all), m - author (my)
-    """Clear bot messages."""
-
-    access_bot = False
-    access_admin = False
-    access_author = False
-    text_rights_bot = False
-    text_rights_user = False
-    type = ctx.message.channel.type
-
-    if count < 1:
-        count = 1
-    elif count > 100:
-        count = 100
-
-    target_m = ctx.message
-    if id:
-        try:
-            target_m = await client.get_message(ctx.message.channel, id)
-        except:
-            target_m = None
-
-    cl_before = target_m if not after else None
-    cl_after = target_m if after else None
-
-    if type == type.text:
-        if ctx.message.author.server_permissions.manage_messages or ctx.message.author.server_permissions.administrator:
-            text_rights_user = True
-    if mode == "b":
-        if type == type.private or type == type.group or (type == type.text and text_rights_user):
-            access_bot = True
-    if type == type.text and ctx.message.server.me.server_permissions.manage_messages:
-        text_rights_bot = True
-        if mode == "a" and text_rights_user:
-            access_admin = True
-        elif mode == "m":
-            access_author = True
-
-    wait_msg = await client.say("Cleaning...")
-    await client.delete_message(ctx.message)
-            
-    if access_admin:
-        async for msg in client.logs_from(ctx.message.channel, limit=count, before=cl_before, after=cl_after):
-            await client.delete_message(msg)
-    else:
-        i = 0
-        async for msg in client.logs_from(ctx.message.channel, limit=100, before=cl_before, after=cl_after):
-            if i < count:
-                if (access_author and msg.author == ctx.message.author) or (access_bot and msg.author == client.user):
-                    await client.delete_message(msg)
-                    i += 1
-    if text_rights_bot:
-        await client.delete_message(wait_msg)
-
-
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def xk(ctx, num=""):
     """Random xkcd."""
 
@@ -219,7 +162,7 @@ async def xk(ctx, num=""):
             await client.say(embed=embed)
 
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def hs(ctx, page=0, img_num=0):
     """Random Homestuck pic."""
 
@@ -379,7 +322,8 @@ async def da(ctx, author="ikimaru-art", amount="1", *tags):
 
     f = feedparser.parse(source_link)
 
-    f_max = 10 if len(f.entries) >= 10 else len(f.entries)
+    # f_max = 10 if len(f.entries) >= 10 else len(f.entries)
+    f_max = len(f.entries)
     if n > f_max:
         n = f_max
     elif n < 1:
@@ -462,7 +406,8 @@ async def tb(ctx, author="discount-supervillain", amount="1", *tags):
         else:
             f = feedparser.parse("{0}://{1}.tumblr.com/rss".format(pr, author))
 
-        f_max = 10 if len(f.entries) >= 10 else len(f.entries)
+        # f_max = 10 if len(f.entries) >= 10 else len(f.entries)
+        f_max = len(f.entries)
         if n > f_max:
             n = f_max
         elif n < 1:
@@ -472,7 +417,7 @@ async def tb(ctx, author="discount-supervillain", amount="1", *tags):
             await client.say(f.entries[num].link)
 
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, hidden=True)
 async def gh(ctx, repo="darkreader/darkreader", amount=3):
     """GitHub commits."""
 
@@ -480,7 +425,8 @@ async def gh(ctx, repo="darkreader/darkreader", amount=3):
 
     if f.entries:
         n = amount
-        f_max = 10 if len(f.entries) >= 10 else len(f.entries)
+        # f_max = 10 if len(f.entries) >= 10 else len(f.entries)
+        f_max = len(f.entries)
         if n > f_max:
             n = f_max
         elif n < 1:
@@ -595,6 +541,62 @@ async def cr(ctx):
             )
         else:
             await client.say(embed=embed)
+
+
+@client.command(pass_context=True)
+async def cl(ctx, count=1, mode="a", id=0, after=0):  # b - (this) bot, a - all, m - my
+    """Clear messages."""
+
+    access_bot = False
+    access_admin = False
+    access_author = False
+    text_rights_bot = False
+    text_rights_user = False
+    type = ctx.message.channel.type
+
+    if count < 1:
+        count = 1
+    elif count > 100:
+        count = 100
+
+    target_m = ctx.message
+    if id:
+        try:
+            target_m = await client.get_message(ctx.message.channel, id)
+        except:
+            target_m = None
+
+    cl_before = target_m if not after else None
+    cl_after = target_m if after else None
+
+    if type == type.text:
+        if ctx.message.author.server_permissions.manage_messages or ctx.message.author.server_permissions.administrator:
+            text_rights_user = True
+    if mode == "b":
+        if type == type.private or type == type.group or (type == type.text and text_rights_user):
+            access_bot = True
+    if type == type.text and ctx.message.server.me.server_permissions.manage_messages:
+        text_rights_bot = True
+        if mode == "a" and text_rights_user:
+            access_admin = True
+        elif mode == "m":
+            access_author = True
+
+    wait_msg = await client.say("🗑 Cleaning...")
+    await client.delete_message(ctx.message)
+            
+    if access_admin:
+        async for msg in client.logs_from(ctx.message.channel, limit=count, before=cl_before, after=cl_after):
+            await client.delete_message(msg)
+    else:
+        i = 0
+        async for msg in client.logs_from(ctx.message.channel, limit=100, before=cl_before, after=cl_after):
+            if i < count:
+                if (access_author and msg.author == ctx.message.author) or (access_bot and msg.author == client.user):
+                    await client.delete_message(msg)
+                    i += 1
+    if text_rights_bot:
+        await client.delete_message(wait_msg)
 
 
 client.run(os.environ.get("TOKEN", None))
